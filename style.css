@@ -333,8 +333,338 @@ body {
 .fade-in:nth-child(3) { animation-delay: 0.4s; }
 
 /* ================================
+   MEMORY TIMELINE SECTION
+   ================================ */
+
+.memory-timeline-section {
+    padding: 80px 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+}
+
+.timeline-title {
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: 700;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 60px;
+    letter-spacing: 2px;
+    opacity: 0;
+    animation: fadeInUp 1s ease-out 0.5s forwards;
+}
+
+.timeline-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    justify-content: center;
+    align-items: center;
+    perspective: 1000px;
+}
+
+.timeline-photo {
+    position: relative;
+    width: 220px;
+    height: 220px;
+    opacity: 0;
+    transform: scale(0.8) translateY(50px);
+    transition: all 0.4s ease;
+}
+
+.timeline-photo.reveal {
+    animation: photoReveal 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes photoReveal {
+    0% {
+        opacity: 0;
+        transform: scale(0.8) translateY(50px) rotate(-5deg);
+    }
+    50% {
+        opacity: 0.7;
+        transform: scale(1.05) translateY(-10px) rotate(2deg);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0) rotate(0deg);
+    }
+}
+
+.timeline-photo.revealed {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    animation: floatPhoto 3s ease-in-out infinite;
+}
+
+@keyframes floatPhoto {
+    0%, 100% {
+        transform: translateY(0px) rotate(0deg);
+    }
+    50% {
+        transform: translateY(-10px) rotate(1deg);
+    }
+}
+
+.photo-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 240px;
+    height: 240px;
+    border-radius: 20px;
+    background: linear-gradient(45deg, #667eea, #764ba2, #f093fb, #f5576c);
+    background-size: 300% 300%;
+    animation: glowPulse 3s ease-in-out infinite;
+    filter: blur(20px);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    z-index: 0;
+}
+
+.timeline-photo.reveal .photo-glow,
+.timeline-photo.revealed .photo-glow {
+    opacity: 0.6;
+}
+
+@keyframes glowPulse {
+    0%, 100% {
+        background-position: 0% 50%;
+        opacity: 0.4;
+    }
+    50% {
+        background-position: 100% 50%;
+        opacity: 0.7;
+    }
+}
+
+.memory-img {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    z-index: 1;
+    transition: all 0.4s ease;
+}
+
+.timeline-photo:hover .memory-img {
+    transform: scale(1.1) rotate(2deg);
+    border-color: rgba(240, 147, 251, 0.6);
+    box-shadow: 0 20px 70px rgba(240, 147, 251, 0.5);
+}
+
+.photo-overlay {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
+    opacity: 0;
+    transform: scale(0);
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 20px rgba(102, 126, 234, 0.5);
+}
+
+.timeline-photo.reveal .photo-overlay,
+.timeline-photo.revealed .photo-overlay {
+    opacity: 1;
+    transform: scale(1);
+    animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.8s backwards;
+}
+
+@keyframes bounceIn {
+    0% {
+        transform: scale(0);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.photo-number {
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+/* ================================
+   CELEBRATION EFFECTS
+   ================================ */
+
+.celebration-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9997;
+}
+
+/* Camera Flash Effect */
+.camera-flash {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #ffffff;
+    z-index: 9998;
+    animation: flashEffect 0.5s ease-out forwards;
+    pointer-events: none;
+}
+
+@keyframes flashEffect {
+    0% {
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.9;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+/* Floating Hearts */
+.floating-heart {
+    position: absolute;
+    font-size: 30px;
+    opacity: 0;
+    animation: heartFloat 4s ease-out forwards;
+    pointer-events: none;
+    filter: drop-shadow(0 0 10px rgba(255, 105, 180, 0.8));
+}
+
+@keyframes heartFloat {
+    0% {
+        transform: translateY(0) rotate(0deg) scale(0);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+        transform: translateY(-20px) rotate(10deg) scale(1);
+    }
+    100% {
+        transform: translateY(-500px) rotate(360deg) scale(0.5);
+        opacity: 0;
+    }
+}
+
+/* Confetti */
+.confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: #f093fb;
+    opacity: 0;
+    animation: confettiFall 3s ease-out forwards;
+    pointer-events: none;
+}
+
+@keyframes confettiFall {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+    }
+}
+
+/* ================================
+   RESPONSIVE TIMELINE
+   ================================ */
+
+@media (max-width: 1200px) {
+    .timeline-photo {
+        width: 200px;
+        height: 200px;
+    }
+    
+    .photo-glow {
+        width: 220px;
+        height: 220px;
+    }
+}
+
+@media (max-width: 768px) {
+    .timeline-title {
+        font-size: 2rem;
+    }
+    
+    .timeline-container {
+        gap: 20px;
+    }
+    
+    .timeline-photo {
+        width: 150px;
+        height: 150px;
+    }
+    
+    .photo-glow {
+        width: 170px;
+        height: 170px;
+    }
+    
+    .photo-overlay {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .photo-number {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .memory-timeline-section {
+        padding: 60px 15px;
+    }
+    
+    .timeline-title {
+        font-size: 1.8rem;
+        margin-bottom: 40px;
+    }
+    
+    .timeline-container {
+        gap: 15px;
+    }
+    
+    .timeline-photo {
+        width: 140px;
+        height: 140px;
+    }
+    
+    .photo-glow {
+        width: 160px;
+        height: 160px;
+    }
+}
+/* ================================
    MEDIA SECTION
    ================================ */
+
 
 .media-section {
     padding: 60px 20px;
