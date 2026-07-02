@@ -239,6 +239,147 @@ document.querySelectorAll('img').forEach(img => {
     });
 });
 */
+// ================================
+// MEMORY TIMELINE ANIMATION
+// ================================
+
+const timelinePhotos = document.querySelectorAll('.timeline-photo');
+const celebrationContainer = document.getElementById('celebrationContainer');
+let timelineAnimationStarted = false;
+
+// Intersection Observer for Timeline Section
+const timelineObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting && !timelineAnimationStarted) {
+            timelineAnimationStarted = true;
+            startTimelineAnimation();
+        }
+    });
+}, {
+    threshold: 0.3
+});
+
+// Observe the timeline section
+const timelineSection = document.getElementById('memoryTimelineSection');
+if (timelineSection) {
+    timelineObserver.observe(timelineSection);
+}
+
+// Start Timeline Animation
+function startTimelineAnimation() {
+    let delay = 0;
+    const delayIncrement = 1800; // 1.8 seconds between each photo
+
+    timelinePhotos.forEach((photo, index) => {
+        setTimeout(() => {
+            // Add reveal class
+            photo.classList.add('reveal');
+            
+            // After reveal animation completes, add revealed class
+            setTimeout(() => {
+                photo.classList.remove('reveal');
+                photo.classList.add('revealed');
+            }, 1200);
+
+            // Camera flash effect on each photo
+            createCameraFlash();
+
+            // If this is the last photo, trigger celebration
+            if (index === timelinePhotos.length - 1) {
+                setTimeout(() => {
+                    triggerCelebration();
+                }, 1500);
+            }
+        }, delay);
+
+        delay += delayIncrement;
+    });
+}
+
+// Camera Flash Effect
+function createCameraFlash() {
+    const flash = document.createElement('div');
+    flash.classList.add('camera-flash');
+    document.body.appendChild(flash);
+
+    setTimeout(() => {
+        flash.remove();
+    }, 500);
+}
+
+// Trigger Celebration (Hearts + Confetti)
+function triggerCelebration() {
+    createFloatingHearts();
+    createConfetti();
+    
+    // Smooth scroll to next section after 4 seconds
+    setTimeout(() => {
+        const mediaSection = document.getElementById('mediaSection');
+        if (mediaSection) {
+            mediaSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }, 4000);
+}
+
+// Create Floating Hearts
+function createFloatingHearts() {
+    const heartCount = 20;
+    const hearts = ['❤️', '💕', '💖', '💗', '💓', '💝'];
+
+    for (let i = 0; i < heartCount; i++) {
+        setTimeout(() => {
+            const heart = document.createElement('div');
+            heart.classList.add('floating-heart');
+            heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+            
+            // Random horizontal position
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.animationDelay = Math.random() * 0.5 + 's';
+            heart.style.animationDuration = (Math.random() * 2 + 3) + 's';
+            
+            celebrationContainer.appendChild(heart);
+
+            setTimeout(() => {
+                heart.remove();
+            }, 4000);
+        }, i * 150);
+    }
+}
+
+// Create Confetti
+function createConfetti() {
+    const confettiCount = 50;
+    const colors = ['#f093fb', '#f5576c', '#667eea', '#764ba2', '#4facfe', '#00f2fe'];
+
+    for (let i = 0; i < confettiCount; i++) {
+        setTimeout(() => {
+            const confetti = document.createElement('div');
+            confetti.classList.add('confetti');
+            
+            // Random properties
+            confetti.style.left = Math.random() * 100 + '%';
+            confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            confetti.style.animationDelay = Math.random() * 0.3 + 's';
+            confetti.style.animationDuration = (Math.random() * 1 + 2) + 's';
+            
+            // Random size
+            const size = Math.random() * 8 + 5;
+            confetti.style.width = size + 'px';
+            confetti.style.height = size + 'px';
+            
+            // Random shape (some squares, some circles)
+            if (Math.random() > 0.5) {
+                confetti.style.borderRadius = '50%';
+            }
+
+            celebrationContainer.appendChild(confetti);
+
+            setTimeout(() => {
+                confetti.remove();
+            }, 3000);
+        }, i * 50);
+    }
+}
 
 // ================================
 // CONSOLE MESSAGE
